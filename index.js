@@ -8,6 +8,8 @@ const port = 3000;
 require('dotenv').config();
 app.use(bodyParser.json());
 
+const apiKey = process.env.API_KEY;
+
 var db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -20,7 +22,14 @@ db.connect(function(err) {
   console.log("Connected with the database!");
 });
 
+function checkKey(clientApiKey) {
+    if (clientApiKey !== apiKey) { return false; } 
+    else { return true; }
+  }
+
 app.get('/', (req, res) => { // alle endpoints teruggeven
+  if(!checkKey(req.query.apiKey)) { return res.status(401).json({ error: 'Unauthorized' }); } // Check if authorized
+  
   res.send(`FITWAVE_API
     ----------------------
     Endpoints:
@@ -30,6 +39,8 @@ app.get('/', (req, res) => { // alle endpoints teruggeven
 });
 
 app.get('/users', (req, res) => { // Alle users ophalen
+  if(!checkKey(req.query.apiKey)) { return res.status(401).json({ error: 'Unauthorized' }); } // Check if authorized
+
   db.query("SELECT * FROM user", function (err, result, fields) { // user query sql
     if (err) throw err;
     res.send(result);
@@ -37,6 +48,8 @@ app.get('/users', (req, res) => { // Alle users ophalen
 });
 
 app.post('/sign_in', (req, res) => {
+  if(!checkKey(req.query.apiKey)) { return res.status(401).json({ error: 'Unauthorized' }); } // Check if authorized
+
   const { username, password } = req.body; // request body ophalen
 
   db.query("SELECT * FROM user", async function (err, users, fields) { // alle users ophalen database
@@ -57,6 +70,8 @@ app.post('/sign_in', (req, res) => {
 });
 
 app.post('/sign_up', async (req, res) => {
+  if(!checkKey(req.query.apiKey)) { return res.status(401).json({ error: 'Unauthorized' }); } // Check if authorized
+
   const { username, email, password } = req.body; // request body ophalen
 
   if(!username || !email || !password) { // Checken of alle values zijn opgehaalt of bestaan
