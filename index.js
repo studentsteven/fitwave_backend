@@ -65,7 +65,7 @@ app.post('/sign_in', (req, res) => {
       return res.status(400).json({ message: 'Ongeldig wachtwoord' });
     }
 
-    res.status(200).json({ auth: true, user_id: user.id }); // authenticated, teruggeven user.id
+    res.status(200).json({ auth: true, user_id: user.id, username: user.username, email: user.email }); // authenticated, teruggeven user.id
   });
 });
 
@@ -86,7 +86,7 @@ app.post('/sign_up', async (req, res) => {
   var insert_user = "INSERT INTO user (username, email, password) VALUES (?, ?, ?)";
   db.query(insert_user, [username, email, password_hash], function (err, result) {
     if (err) throw err;
-    res.status(201).json({ auth: true, user_id: result.insertId });
+    res.status(201).json({ auth: true, user_id: result.insertId, username: username, email: email });
   });
 });
 
