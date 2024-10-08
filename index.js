@@ -38,9 +38,13 @@ app.post('/accept_friend', acceptFriendRoute);
 const declineFriendRoute = require('./routes/decline_friend');
 app.post('/decline_friend', declineFriendRoute);
 
+// Route naar friendrequests, bekijk alle vriendschapsverzoeken
+const sendFriendRequest = require('./routes/send_friend_request');
+app.post('/send_friend_request', sendFriendRequest);
+
 // Route naar workout
 const workoutRoute = require('./routes/workouts');
-app.post('/workouts', workoutRoute);
+app.get('/workouts', workoutRoute);
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Backend running on port ${port}`);
