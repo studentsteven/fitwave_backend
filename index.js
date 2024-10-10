@@ -46,6 +46,19 @@ app.post('/send_friend_request', sendFriendRequest);
 const workoutRoute = require('./routes/workouts');
 app.get('/workouts', workoutRoute);
 
+// Calorieen toevoegen aan de database
+const calToevoegen = require('./routes/cal_toevoegen');
+app.post('/cal_toevoegen', calToevoegen);
+
+
+// Krijg alle Calorieen van user
+const calGet = require('./routes/cal');
+app.get('/cal', calGet);
+
+// Verwijder calorieen
+const calDelete = require('./routes/delete_cal');
+app.post('/cal_delete', calDelete);
+
 app.listen(port, '0.0.0.0', () => {
   console.log(`Backend running on port ${port}`);
 });
